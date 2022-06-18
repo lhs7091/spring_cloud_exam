@@ -1,5 +1,6 @@
 package com.ecommerce.userservice.controller;
 
+import com.ecommerce.userservice.domain.UserEntity;
 import com.ecommerce.userservice.service.UserService;
 import com.ecommerce.userservice.dto.RequestUserDto;
 import com.ecommerce.userservice.dto.ResponseUser;
@@ -10,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/user-service")
 public class UserController {
 
     private final Environment env;
@@ -20,7 +24,7 @@ public class UserController {
 
     @GetMapping("/health_check")
     public String status(){
-        return "It's Working in User Service";
+        return String.format("It's Working in User Service on Port %s", env.getProperty("local.server.port"));
     }
 
     @GetMapping("/welcome")
@@ -35,5 +39,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<ResponseUser>> getUsers(){
+        Iterable<UserEntity> userList = userService.getUserByAll();
+        List<ResponseUser> res = new ArrayList<>();
+
+        userList.forEach(v-> res.add(ResponseUser.userEntityToResponseUser(v)));
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> getUser(@PathVariable String userId){
+        UserEntity userEntity = userService.getUserByUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseUser.userEntityToResponseUser(userEntity));
+    }
 
 }
