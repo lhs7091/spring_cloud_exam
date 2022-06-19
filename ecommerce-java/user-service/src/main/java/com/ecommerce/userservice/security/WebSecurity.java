@@ -31,7 +31,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 //        http.authorizeHttpRequests().antMatchers("/users/**").permitAll();
         http.authorizeRequests()
                 .antMatchers("/**")
-                .access("hasIpAddress('192.168.45.100')")
+                .access("hasIpAddress('192.168.45.100') or hasIpAddress('localhost') or hasIpAddress('127.0.0.1')")
         .and()
         .addFilter(getAuthenticationFilter());
         // h2 memory console 사용할 경우, 표시하기 위해서 적용
