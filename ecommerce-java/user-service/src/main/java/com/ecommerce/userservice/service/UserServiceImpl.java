@@ -5,6 +5,8 @@ import com.ecommerce.userservice.dto.ResponseOrder;
 import com.ecommerce.userservice.repository.UserRepository;
 import com.ecommerce.userservice.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,5 +37,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Iterable<UserEntity> getUserByAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Email not Found"));
+
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(), new ArrayList<>());
     }
 }
