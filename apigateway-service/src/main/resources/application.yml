@@ -20,27 +20,6 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-#        - id: user-service
-#          uri: lb://USER-SERVICE
-#          predicates:
-#            - Path=/user-service/**
-#          filters:
-#            - AddRequestHeader=first-request, first-request-header2
-#            - AddResponseHeader=first-response, first-response-header2
-#            - CustomFilter
-#            - name: LoggingFilter
-#              args:
-#                baseMessage: Hi, There.
-#                preLogger: true
-#                postLogger: true
-#        - id: second-service
-#          uri: lb://SECOND-SERVICE
-#          predicates:
-#            - Path=/second-service/**
-#          filters:
-#            - AddRequestHeader=second-request, second-request-header2
-#            - AddResponseHeader=second-response, second-response-header2
-#            - CustomFilter
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -65,6 +44,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: user-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -77,3 +57,7 @@ spring:
             - Path=/order-service/**
           filters:
             - CustomFilter
+
+token:
+  expiration_time: 86400000
+  secret: jsonWebTokenTest1234567890123456jsonWebTokenTest1234567890123456 # 길이 512bit 이상 작성할것.
