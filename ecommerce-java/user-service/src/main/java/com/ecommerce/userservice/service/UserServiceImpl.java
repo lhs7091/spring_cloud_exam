@@ -1,9 +1,8 @@
 package com.ecommerce.userservice.service;
 
 import com.ecommerce.userservice.domain.UserEntity;
-import com.ecommerce.userservice.dto.ResponseOrder;
-import com.ecommerce.userservice.repository.UserRepository;
 import com.ecommerce.userservice.dto.UserDto;
+import com.ecommerce.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +35,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Iterable<UserEntity> getUserByAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public UserDto getUserDetailsByEmail(String username) {
+        UserEntity userEntity = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not Found by Email : " + username));
+        return UserDto.userEntityToUserDto(userEntity);
     }
 
     @Override
