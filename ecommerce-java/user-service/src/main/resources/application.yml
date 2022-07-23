@@ -26,6 +26,12 @@ eureka:
 greeting:
   message: Welcome to the Simple E-Commerce
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
 #token:
 #  expiration_time: 86400000
 #  secret: jsonWebTokenTest1234567890123456jsonWebTokenTest1234567890123456 # 길이 512bit 이상 작성할것.
