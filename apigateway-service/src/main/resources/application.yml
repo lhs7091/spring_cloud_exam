@@ -6,7 +6,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://192.168.45.100:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 
 spring:
   application:
@@ -46,6 +46,14 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
         - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
             - Path=/catalog-service/**
@@ -58,6 +66,11 @@ spring:
           filters:
             - CustomFilter
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace
 token:
   expiration_time: 86400000
   secret: jsonWebTokenTest1234567890123456jsonWebTokenTest1234567890123456 # 길이 512bit 이상 작성할것.
