@@ -4,8 +4,15 @@ server:
 spring:
   application:
     name: config-service
+  profiles:
+    active: native
   cloud:
     config:
       server:
+        native:
+          search-locations: file://${user.home}/바탕화면/code/java/native-local-repo
         git:
-          uri: file:///home/lhs/바탕화면/code/java/git-local-repo
+#          uri: file:///home/lhs/바탕화면/code/java/git-local-repo
+          uri: https://github.com/lhs7091/spring-cloud-config.git
+          username: [username]
+          password: [password]
